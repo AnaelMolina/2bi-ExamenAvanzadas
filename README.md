@@ -1,4 +1,4 @@
-# Taller 3 - Arquitectura de Microservicios con API Gateway
+Arquitectura de Microservicios con API Gateway
 
 ## 📋 Descripción
 Este proyecto implementa una arquitectura de microservicios con:
