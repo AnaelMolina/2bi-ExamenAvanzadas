@@ -1,36 +1,36 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace ApiEmpleado.Models
+namespace ApiCliente.Models
 {
     /// <summary>
-    /// Representa un empleado en el sistema
+    /// Representa un cliente en el sistema
     /// </summary>
-    [Table("empleado")]
-    public class Empleado
+    [Table("cliente")]
+    public class Cliente
     {
         /// <summary>
-        /// Identificador único del empleado
+        /// Identificador único del cliente
         /// </summary>
         [Key]
         public int Id { get; set; }
 
         /// <summary>
-        /// Número de cédula del empleado
+        /// Número de cédula del cliente
         /// </summary>
         [Required]
         public string? Cedula { get; set; }
 
         /// <summary>
-        /// Nombres del empleado
+        /// Nombre del cliente
         /// </summary>
         [Required]
-        public string? Nombres { get; set; }
+        public string? Nombre { get; set; }
 
         /// <summary>
-        /// Apellidos del empleado
+        /// Teléfono del cliente
         /// </summary>
         [Required]
-        public string? Apellidos { get; set; }
+        public string? Telefono { get; set; }
     }
 }

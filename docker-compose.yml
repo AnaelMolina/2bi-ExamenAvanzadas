@@ -1,0 +1,98 @@
+services:
+  # Servidor de Discovery (Consul)
+  consul:
+    image: consul:1.15
+    container_name: consul-discovery
+    ports:
+      - "8500:8500"
+      - "8600:8600/udp"
+    environment:
+      - CONSUL_BIND_INTERFACE=eth0
+    command: agent -server -ui -bootstrap-expect=1 -client=0.0.0.0
+    networks:
+      - microservices-network
+
+  # Base de datos PostgreSQL
+  postgres:
+    image: postgres:15-alpine
+    container_name: postgres-db
+    environment:
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - microservices-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # API Gateway
+  api-gateway:
+    build:
+      context: .
+      dockerfile: ApiGateway/Dockerfile
+    container_name: api-gateway
+    ports:
+      - "5003:5003"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:5003
+    depends_on:
+      - consul
+      - postgres
+    networks:
+      - microservices-network
+    restart: unless-stopped
+
+  # API Vehiculo
+  api-vehiculo:
+    build:
+      context: .
+      dockerfile: ApiVehiculo/Dockerfile
+    container_name: api-vehiculo
+    ports:
+      - "5004:5004"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:5004
+      - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=ApiVehiculo;Username=postgres;Password=postgres
+    depends_on:
+      postgres:
+        condition: service_healthy
+      consul:
+        condition: service_started
+    networks:
+      - microservices-network
+    restart: unless-stopped
+
+  # API Cliente
+  api-cliente:
+    build:
+      context: .
+      dockerfile: ApiCliente/Dockerfile
+    container_name: api-cliente
+    ports:
+      - "5005:5005"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:5005
+      - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=ApiCliente;Username=postgres;Password=postgres
+    depends_on:
+      postgres:
+        condition: service_healthy
+      consul:
+        condition: service_started
+    networks:
+      - microservices-network
+    restart: unless-stopped
+
+networks:
+  microservices-network:
+    driver: bridge
+
+volumes:
+  postgres_data:

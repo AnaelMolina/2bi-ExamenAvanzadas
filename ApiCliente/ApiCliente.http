@@ -1,0 +1,29 @@
+### Obtener todos los clientes
+GET http://localhost:5005/api/clientes
+
+### Obtener cliente por ID
+GET http://localhost:5005/api/clientes/1
+
+### Crear nuevo cliente
+POST http://localhost:5005/api/clientes
+Content-Type: application/json
+
+{
+  "cedula": "1234567890",
+  "nombre": "Juan Pérez",
+  "telefono": "2234-5678"
+}
+
+### Actualizar cliente
+PUT http://localhost:5005/api/clientes/1
+Content-Type: application/json
+
+{
+  "id": 1,
+  "cedula": "9876543210",
+  "nombre": "María García",
+  "telefono": "8765-4321"
+}
+
+### Eliminar cliente
+DELETE http://localhost:5005/api/clientes/1

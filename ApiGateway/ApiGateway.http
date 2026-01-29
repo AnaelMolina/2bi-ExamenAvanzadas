@@ -1,6 +1,67 @@
-@ApiGateway_HostAddress = http://localhost:5156
+@ApiGateway_HostAddress = http://localhost:5003
 
-GET {{ApiGateway_HostAddress}}/weatherforecast/
+### Obtener todos los vehículos a través del Gateway
+GET {{ApiGateway_HostAddress}}/api/vehiculos
+Accept: application/json
+
+### Obtener vehículo por ID a través del Gateway
+GET {{ApiGateway_HostAddress}}/api/vehiculos/1
+Accept: application/json
+
+### Crear nuevo vehículo a través del Gateway
+POST {{ApiGateway_HostAddress}}/api/vehiculos
+Content-Type: application/json
+
+{
+  "placa": "ABC-1234",
+  "provincia": "San José"
+}
+
+### Actualizar vehículo a través del Gateway
+PUT {{ApiGateway_HostAddress}}/api/vehiculos/1
+Content-Type: application/json
+
+{
+  "id": 1,
+  "placa": "XYZ-9999",
+  "provincia": "Alajuela"
+}
+
+### Eliminar vehículo a través del Gateway
+DELETE {{ApiGateway_HostAddress}}/api/vehiculos/1
 Accept: application/json
 
 ###
+
+### Obtener todos los clientes a través del Gateway
+GET {{ApiGateway_HostAddress}}/api/clientes
+Accept: application/json
+
+### Obtener cliente por ID a través del Gateway
+GET {{ApiGateway_HostAddress}}/api/clientes/1
+Accept: application/json
+
+### Crear nuevo cliente a través del Gateway
+POST {{ApiGateway_HostAddress}}/api/clientes
+Content-Type: application/json
+
+{
+  "cedula": "1234567890",
+  "nombre": "Juan Pérez",
+  "telefono": "2234-5678"
+}
+
+### Actualizar cliente a través del Gateway
+PUT {{ApiGateway_HostAddress}}/api/clientes/1
+Content-Type: application/json
+
+{
+  "id": 1,
+  "cedula": "9876543210",
+  "nombre": "María García",
+  "telefono": "8765-4321"
+}
+
+### Eliminar cliente a través del Gateway
+DELETE {{ApiGateway_HostAddress}}/api/clientes/1
+Accept: application/json

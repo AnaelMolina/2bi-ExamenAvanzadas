@@ -1,15 +1,15 @@
 {
   "Routes": [
     {
-      "DownstreamPathTemplate": "/api/empleados",
+      "DownstreamPathTemplate": "/api/vehiculos",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5002
+          "Host": "api-vehiculo",
+          "Port": 5004
         }
       ],
-      "UpstreamPathTemplate": "/api/empleados",
+      "UpstreamPathTemplate": "/api/vehiculos",
       "UpstreamHttpMethod": [
         "GET",
         "POST"
@@ -19,15 +19,52 @@
       }
     },
     {
-      "DownstreamPathTemplate": "/api/empleados/{id}",
+      "DownstreamPathTemplate": "/api/vehiculos/{id}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5002
+          "Host": "api-vehiculo",
+          "Port": 5004
         }
       ],
-      "UpstreamPathTemplate": "/api/empleados/{id}",
+      "UpstreamPathTemplate": "/api/vehiculos/{id}",
+      "UpstreamHttpMethod": [
+        "GET",
+        "PUT",
+        "DELETE"
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/clientes",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "api-cliente",
+          "Port": 5005
+        }
+      ],
+      "UpstreamPathTemplate": "/api/clientes",
+      "UpstreamHttpMethod": [
+        "GET",
+        "POST"
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/clientes/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "api-cliente",
+          "Port": 5005
+        }
+      ],
+      "UpstreamPathTemplate": "/api/clientes/{id}",
       "UpstreamHttpMethod": [
         "GET",
         "PUT",
@@ -39,6 +76,6 @@
     }
   ],
   "GlobalConfiguration": {
-    "BaseUrl": "http://localhost:5003"
+    "BaseUrl": "http://api-gateway:5003"
   }
 }

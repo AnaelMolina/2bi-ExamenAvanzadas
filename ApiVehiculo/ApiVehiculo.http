@@ -1,0 +1,27 @@
+### Obtener todos los vehículos
+GET http://localhost:5004/api/vehiculos
+
+### Obtener vehículo por ID
+GET http://localhost:5004/api/vehiculos/1
+
+### Crear nuevo vehículo
+POST http://localhost:5004/api/vehiculos
+Content-Type: application/json
+
+{
+  "placa": "ABC-1234",
+  "provincia": "San José"
+}
+
+### Actualizar vehículo
+PUT http://localhost:5004/api/vehiculos/1
+Content-Type: application/json
+
+{
+  "id": 1,
+  "placa": "XYZ-9999",
+  "provincia": "Alajuela"
+}
+
+### Eliminar vehículo
+DELETE http://localhost:5004/api/vehiculos/1

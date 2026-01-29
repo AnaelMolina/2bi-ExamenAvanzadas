@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using ApiGateway.Handlers;
+using Consul;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,6 +35,12 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 // Registrar el handler que agrega el header secreto
 builder.Services.AddTransient<GatewaySecretHandler>();
 
+// Registrar Consul Client
+builder.Services.AddSingleton<IConsulClient, ConsulClient>(p => new ConsulClient(config =>
+{
+    config.Address = new Uri("http://consul:8500");
+}));
+
 // Registrar Ocelot con el handler
 builder.Services
     .AddOcelot()
@@ -52,12 +59,37 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+// Health check endpoint
+app.MapGet("/health", () => Results.Ok(new { status = "healthy", service = "api-gateway" }))
+    .WithName("Health");
+
 // Middleware de autenticación y autorización
 app.UseAuthentication();
 app.UseAuthorization();
 
 // Mapear los controllers ANTES de Ocelot para que /api/auth y /api/gateway funcionen
 app.MapControllers();
+
+// Registrar el servicio en Consul
+var consulClient = app.Services.GetRequiredService<IConsulClient>();
+var serviceName = "api-gateway";
+var serviceId = $"{serviceName}-1";
+var registration = new AgentServiceRegistration()
+{
+    ID = serviceId,
+    Name = serviceName,
+    Address = "api-gateway",
+    Port = 5003,
+    Check = new AgentServiceCheck()
+    {
+        HTTP = "http://api-gateway:5003/health",
+        Interval = TimeSpan.FromSeconds(10),
+        Timeout = TimeSpan.FromSeconds(5),
+        DeregisterCriticalServiceAfter = TimeSpan.FromSeconds(30)
+    }
+};
+
+await consulClient.Agent.ServiceRegister(registration);
 
 // Middleware Ocelot - Solo aplica a rutas que NO son del Gateway local
 app.MapWhen(
@@ -66,4 +98,4 @@ app.MapWhen(
     appBuilder => appBuilder.UseOcelot().Wait()
 );
 
-app.Run();
+app.Run("http://0.0.0.0:5003");
